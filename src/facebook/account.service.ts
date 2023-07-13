@@ -5,7 +5,7 @@ type ListAccountsResponse = { data: { account_id: string; id: string; name: stri
 export const getAccounts = async () => {
     const client = await getClient();
 
-    const BUSINESS_ID = 479140315800396;
+    const BUSINESS_ID = 10152656083838928;
 
     return Promise.all(
         ['client_ad_accounts', 'owned_ad_accounts'].map(async (edge) => {
