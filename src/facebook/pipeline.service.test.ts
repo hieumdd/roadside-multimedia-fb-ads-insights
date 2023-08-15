@@ -5,8 +5,8 @@ it('pipeline', async () => {
     return runPipeline(
         {
             accountId: '753097179335560',
-            start: '2023-07-01',
-            end: '2023-08-01',
+            start: '2023-01-01',
+            end: '2023-02-01',
         },
         pipelines.ADS_INSIGHTS,
     )
@@ -19,8 +19,8 @@ it('pipeline', async () => {
 
 it('create-tasks', async () => {
     return createPipelineTasks({
-        start: '2023-05-01',
-        end: '2023-06-01',
+        start: '2023-08-01',
+        end: '2023-09-01',
     })
         .then((result) => expect(result).toBeDefined())
         .catch((error) => {

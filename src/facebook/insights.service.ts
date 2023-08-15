@@ -19,11 +19,11 @@ export type InsightsConfig = {
 export const get = async (options: ReportOptions, config: InsightsConfig): Promise<Readable> => {
     const client = await getClient();
 
-    type RequestReportResponse = {
-        report_run_id: string;
-    };
-
     const requestReport = async (): Promise<string> => {
+        type RequestReportResponse = {
+            report_run_id: string;
+        };
+
         const { accountId, start: since, end: until } = options;
         const { level, fields, breakdowns } = config;
 
@@ -42,15 +42,15 @@ export const get = async (options: ReportOptions, config: InsightsConfig): Promi
             .then(({ data }) => data.report_run_id);
     };
 
-    type ReportStatusResponse = {
-        async_percent_completion: number;
-        async_status: string;
-    };
-
     const pollReport = async (reportId: string): Promise<string> => {
+        type ReportStatusResponse = {
+            async_percent_completion: number;
+            async_status: string;
+        };
+
         const data = await client
             .request<ReportStatusResponse>({ method: 'GET', url: `/${reportId}` })
-            .then((res) => res.data);
+            .then((response) => response.data);
 
         if (data.async_percent_completion === 100 && data.async_status === 'Job Completed') {
             return reportId;
@@ -65,13 +65,13 @@ export const get = async (options: ReportOptions, config: InsightsConfig): Promi
         return pollReport(reportId);
     };
 
-    type InsightsResponse = {
-        data: Record<string, any>[];
-        paging: { cursors: { after: string }; next: string };
-    };
-
     const getInsights = (reportId: string): Readable => {
-        const stream = new Readable({ objectMode: true, read: () => { } });
+        type InsightsResponse = {
+            data: Record<string, any>[];
+            paging: { cursors: { after: string }; next: string };
+        };
+
+        const stream = new Readable({ objectMode: true, read: () => {} });
 
         const _getInsights = (after?: string) => {
             client
@@ -80,7 +80,7 @@ export const get = async (options: ReportOptions, config: InsightsConfig): Promi
                     url: `/${reportId}/insights`,
                     params: { after, limit: 500 },
                 })
-                .then((res) => res.data)
+                .then((response) => response.data)
                 .then(({ data, paging }) => {
                     data.forEach((row) => stream.push(row));
                     paging.next ? _getInsights(paging.cursors.after) : stream.push(null);
@@ -89,7 +89,7 @@ export const get = async (options: ReportOptions, config: InsightsConfig): Promi
                     if (axios.isAxiosError(error)) {
                         console.log(JSON.stringify(error.response?.data));
                     }
-                    stream.emit('error', error)
+                    stream.emit('error', error);
                 });
         };
 
