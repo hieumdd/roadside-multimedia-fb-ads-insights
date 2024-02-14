@@ -3,7 +3,7 @@ import axios from 'axios';
 type DopplerSecretResponse = { value: { raw: string } };
 
 export const getClient = async () => {
-    const API_VER = 'v16.0';
+    const API_VER = 'v19.0';
 
     const accessToken = await axios
         .request<DopplerSecretResponse>({
